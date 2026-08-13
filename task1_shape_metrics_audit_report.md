@@ -1,16 +1,4 @@
-# Task 1 Report: Shape Metrics Audit
-
-## Purpose
-
-This report summarizes the shape and object metrics already used or tested across the project materials. The goal is to identify what has been measured so far and how each metric helps assess field-boundary map quality.
-
-## Sources Reviewed
-
-- `instancemaker`
-- Xiong et al. (2026) / medium frontier draft
-- Rahebe issue #3 summary in `rahebe.md`
-- Fields of the Planet / FTP paper
-- FTW Mapping Africa final report
+# Shape Metrics Audit
 
 ## Summary Table
 
