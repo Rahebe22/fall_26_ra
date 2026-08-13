@@ -1,0 +1,57 @@
+
+# InstanceMaker and Common Parameters
+do_labelling: True  # Label (and optionally erode/dilate) prediction first?
+catalog_file: data/catalog.csv  # name and path to your input csv catalog
+pred_dir: data/predictions  # folder containing model predictions/score maps
+image_dir: data/images  # optional folder w/satellite images for visualization
+label_dir: tmp/labels  # output folder for writing labeled images
+polygon_dir: tmp/polygons  # output folder for polygonized results
+
+# templates defining naming patterns for: 
+# 1) prediction/score map images 
+# 2) intermediate labeled images
+# 3) polygonized (geojson) outputs 
+prediction_filename_template: "tile<tile>_<year>-<date>_class1.tif"
+labeled_filename_template: "tile<tile>_<year>-<date>_labeled.tif"
+polygon_filename_template: "tile<tile>_<year>-<date>_polygons.geojson"
+
+# How to interpret "threshold":
+# - score: threshold a floating probability/score map (e.g. 0.5)
+# - class: threshold a categorical/argmax class map by selecting class_id
+threshold_type: score   # score | class
+
+threshold: 75  # threshold for hardening score maps
+
+# Used when threshold_type=class (categorical predictions)
+class_id: 1
+
+kernel: [[0, 1, 0],  # image morphology filter
+        [1, 1, 1],
+        [0, 1, 0]]
+erosion_iterations: 4 # number of morphological erosion iterations
+dilation_iterations: 3  # number of morphological dilation iterations
+simplify: 0.00003  # tolerance for polygon simplification
+num_workers: 2  # number of parallel workers
+log_file: None #logs/instancemaker.log  # log file
+
+# MergeFields parameters
+# csv file that specifies the tiles to merge, 
+# set to null if all tiles are to be merged
+tile_geojson: data/zambia_tiles.geojson # geojson containing tile layout
+merged_polygon_dir: tmp/merged_polygons/ # directory to save the merged polygons
+merged_parquet_file: tmp/merged_polygons.parquet # output geoparquet
+
+# ComputeInstances parameters
+attributed_merged_polygon_dir: tmp/attributed_merged_polygons/ # directory to save the attributed merged polygons
+attributed_merged_parquet_file: tmp/attributed_merged_polygons.parquet # output geoparquet
+area_crs: "ESRI:102022" # projection CRS for shape metrics
+
+# Rasterization parameters
+
+rasterized_attributed_merged_tiles_dir: tmp/rasterized_tiles/ # output directory
+rasterization_res: 0.000025 # resolution in degrees
+rasterization_nodata: 0.0 # nodata value
+rasterization_all_touched: True # whether to use all touched method
+rasterization_attributes: ["polygon_id","area_ha", "compactness", "shape_index", "interior_edge", "fractal_dim"] # attributes to rasterize
+rasterization_auto_attrs: True # whether to automatically select attributes
+rasterization_attr_exclude: None # attributes to exclude
